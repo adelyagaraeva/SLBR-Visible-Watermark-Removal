@@ -200,7 +200,7 @@ class BasicModel(object):
 
         print("=> loading checkpoint '{}'".format(resume_path))
         current_checkpoint = torch.load(resume_path)
-                new_stat = {}
+        new_stat = {}
         for key, val in current_checkpoint['state_dict'].items():
             if "module" not in key:
                 new_key = key.split(".")
