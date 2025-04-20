@@ -82,14 +82,24 @@ def main(args):
     
     val_loader = torch.utils.data.DataLoader(dataset_func('test',args),batch_size=args.test_batch, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    data_loaders = (None,val_loader)
+    data_loaders = (None, val_loader)
 
+    # Initialize model
     Machine = models.__dict__[args.models](datasets=data_loaders, args=args)
-
-    
     model = Machine
+
+    # ===> Load pretrained weights
+    print("==> Loading checkpoint...")
+    checkpoint_path = args.resume  # assume you pass it like --resume path/to/model_best.pth.tar
+    checkpoint = torch.load(checkpoint_path, map_location='cpu')
+
+    # Load state_dict
+    state_dict = checkpoint['state_dict']
+    model.model.load_state_dict(state_dict)
+
+    # Set model to evaluation mode
     model.model.eval()
-    print("==> testing VM model ")
+    print("==> Testing model")
     rmses = AverageMeter()
     rmsews = AverageMeter()
     ssimesx = AverageMeter()
