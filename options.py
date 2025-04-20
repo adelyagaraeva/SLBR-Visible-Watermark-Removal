@@ -12,7 +12,7 @@ class Options():
 
     def init(self, parser):        
         # Model structure
-        parser.add_argument('--nets', '-n', metavar='NET', default='dhn',
+        parser.add_argument('--nets', '-n', metavar='NET', default='slbr',
                             choices=model_names,
                             help='model architecture: ' +
                                 ' | '.join(model_names) +
