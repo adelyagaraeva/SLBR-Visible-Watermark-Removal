@@ -15,7 +15,9 @@ from options import Options
 import torch.nn.functional as F
 import pytorch_ssim
 from evaluation import compute_IoU, FScore, AverageMeter, compute_RMSE, normPRED
-from skimage.measure import compare_ssim as ssim
+from skimage.metrics import structural_similarity as compare_ssim
+from skimage.metrics import peak_signal_noise_ratio as compare_psnr
+
 import time
 
 
