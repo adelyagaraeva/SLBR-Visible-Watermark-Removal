@@ -10,6 +10,8 @@ import cv2
 #import torchvision.transforms as transforms
 from abc import ABC, abstractmethod
 from albumentations import HorizontalFlip, RandomResizedCrop, Compose, DualTransform
+from albumentations import Compose, Resize
+
 import albumentations.augmentations.transforms as transforms
 
 class BaseDataset(data.Dataset, ABC):
@@ -61,6 +63,8 @@ class BaseDataset(data.Dataset, ABC):
         """
         pass
 
+from albumentations import Compose
+
 class HCompose(Compose):
     def __init__(self, transforms, *args, additional_targets=None, no_nearest_for_masks=True, **kwargs):
         if additional_targets is None:
@@ -68,15 +72,10 @@ class HCompose(Compose):
                 'real': 'image',
                 # 'mask': 'mask'
             }
-        self.additional_targets = additional_targets
+        # Pass additional_targets directly to Compose
         super().__init__(transforms, *args, additional_targets=additional_targets, **kwargs)
-        # if no_nearest_for_masks:
-        #     for t in transforms:
-        #         if isinstance(t, DualTransform):
-        #             t._additional_targets['mask'] = 'image'
-                    # t._additional_targets['edge'] = 'image'
 
-
+        # Optionally handle no_nearest_for_masks logic here if needed
 def get_params(opt, size):
     w, h = size
     new_h = h
@@ -103,7 +102,7 @@ def get_transform(opt, params=None, grayscale=False, convert=True, additional_ta
         if params is None:
             transform_list.append(RandomResizedCrop(opt.crop_size, opt.crop_size, scale=(0.9, 1.0))) # 0.5,1.0
     elif opt.preprocess == 'resize':
-        transform_list.append(transforms.Resize(opt.input_size, opt.input_size))
+        transform_list.append(Resize(opt.input_size, opt.input_size))
     elif opt.preprocess == 'none':
         return HCompose(transform_list)
 
