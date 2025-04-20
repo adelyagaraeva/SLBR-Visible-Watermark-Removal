@@ -64,9 +64,7 @@ class BasicModel(object):
             # init perception loss
             self.vggloss = VGGLoss(self.args.sltype).to(self.device)
 
-        if self.count_gpu > 1 : # multiple
-            # self.model = DataParallelModel(self.model, device_ids=range(torch.cuda.device_count()))
-            # self.loss = DataParallelCriterion(self.loss, device_ids=range(torch.cuda.device_count()))
+        if self.count_gpu > 1 and not self.args.resume:
             self.model.multi_gpu()
 
         self.model.to(self.device)
